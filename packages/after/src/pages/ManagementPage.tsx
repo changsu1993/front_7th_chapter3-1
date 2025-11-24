@@ -468,14 +468,14 @@ export const ManagementPage: React.FC = () => {
             </div>
 
             {showSuccessAlert && (
-              <Alert variant="success">
+              <Alert variant="success" onClose={() => setShowSuccessAlert(false)}>
                 <AlertTitle>성공</AlertTitle>
                 <AlertDescription>{alertMessage}</AlertDescription>
               </Alert>
             )}
 
             {showErrorAlert && (
-              <Alert variant="destructive">
+              <Alert variant="destructive" onClose={() => setShowErrorAlert(false)}>
                 <AlertTitle>오류</AlertTitle>
                 <AlertDescription>{errorMessage}</AlertDescription>
               </Alert>
