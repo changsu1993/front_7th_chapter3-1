@@ -1,6 +1,7 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useRef } from 'react';
 
 export function useFormState<T extends Record<string, unknown>>(initialState: T = {} as T) {
+  const initialStateRef = useRef(initialState);
   const [formData, setFormData] = useState<T>(initialState);
 
   const setField = useCallback(<K extends keyof T>(field: K, value: T[K]) => {
@@ -11,9 +12,9 @@ export function useFormState<T extends Record<string, unknown>>(initialState: T 
     setFormData(prev => ({ ...prev, ...fields }));
   }, []);
 
-  const reset = useCallback((data: T = initialState) => {
-    setFormData(data);
-  }, [initialState]);
+  const reset = useCallback((data?: T) => {
+    setFormData(data ?? initialStateRef.current);
+  }, []);
 
   const handleChange = useCallback((field: keyof T) => {
     return (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {

@@ -1,7 +1,8 @@
 import { useCallback } from 'react';
 
 type StatusBadgeVariant = 'success' | 'warning' | 'destructive' | 'secondary';
-type RoleBadgeVariant = 'default' | 'info' | 'secondary';
+type RoleBadgeVariant = 'destructive' | 'warning' | 'default' | 'secondary';
+type CategoryBadgeVariant = 'default' | 'info' | 'destructive' | 'secondary';
 
 export function useBadgeVariant() {
   const getStatusVariant = useCallback((status: string): StatusBadgeVariant => {
@@ -13,8 +14,9 @@ export function useBadgeVariant() {
       case 'draft':
         return 'warning';
       case 'suspended':
-      case 'archived':
         return 'destructive';
+      case 'archived':
+        return 'secondary'; // before와 일치: 회색
       default:
         return 'secondary';
     }
@@ -23,9 +25,24 @@ export function useBadgeVariant() {
   const getRoleVariant = useCallback((role: string): RoleBadgeVariant => {
     switch (role) {
       case 'admin':
-        return 'info';
+        return 'destructive'; // before와 일치: 빨간색
       case 'moderator':
-        return 'default';
+        return 'warning'; // before와 일치: 주황색
+      case 'user':
+        return 'default'; // before와 일치: 파란색
+      default:
+        return 'secondary';
+    }
+  }, []);
+
+  const getCategoryVariant = useCallback((category: string): CategoryBadgeVariant => {
+    switch (category) {
+      case 'development':
+        return 'default'; // before와 일치: 파란색 (primary)
+      case 'design':
+        return 'info'; // before와 일치: 시안색
+      case 'accessibility':
+        return 'destructive'; // before와 일치: 빨간색
       default:
         return 'secondary';
     }
@@ -61,6 +78,7 @@ export function useBadgeVariant() {
   return {
     getStatusVariant,
     getRoleVariant,
+    getCategoryVariant,
     getStatusLabel,
     getRoleLabel,
   };

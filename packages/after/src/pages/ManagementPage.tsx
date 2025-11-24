@@ -44,7 +44,7 @@ export const ManagementPage: React.FC = () => {
   const { formData, setFormData, reset: resetForm } = useFormState<Record<string, unknown>>();
   const { data, create, update, remove, publish, archive, restore } = useEntityManagement(entityType);
   const stats = useEntityStats(data, entityType);
-  const { getStatusVariant, getRoleVariant, getStatusLabel, getRoleLabel } = useBadgeVariant();
+  const { getStatusVariant, getRoleVariant, getCategoryVariant, getStatusLabel, getRoleLabel } = useBadgeVariant();
 
   // Reset state when entity type changes
   useEffect(() => {
@@ -207,7 +207,7 @@ export const ManagementPage: React.FC = () => {
               <TableCell className="font-medium">{post.title}</TableCell>
               <TableCell>{post.author}</TableCell>
               <TableCell>
-                <Badge variant="outline">{post.category}</Badge>
+                <Badge variant={getCategoryVariant(post.category)}>{post.category}</Badge>
               </TableCell>
               <TableCell>
                 <Badge variant={getStatusVariant(post.status)}>
@@ -224,12 +224,12 @@ export const ManagementPage: React.FC = () => {
                     </Button>
                   )}
                   {post.status === 'published' && (
-                    <Button variant="warning" size="sm" onClick={() => handleStatusAction(post.id, 'archive')}>
+                    <Button variant="secondary" size="sm" onClick={() => handleStatusAction(post.id, 'archive')}>
                       보관
                     </Button>
                   )}
                   {post.status === 'archived' && (
-                    <Button variant="secondary" size="sm" onClick={() => handleStatusAction(post.id, 'restore')}>
+                    <Button variant="default" size="sm" onClick={() => handleStatusAction(post.id, 'restore')}>
                       복원
                     </Button>
                   )}
