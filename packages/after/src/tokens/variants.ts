@@ -36,14 +36,14 @@ export const badgeVariants = {
   },
 } as const;
 
-// Alert variants 정의
+// Alert variants 정의 (before 패키지 스타일 기준, CSS 변수 사용)
 export const alertVariants = {
   variant: {
-    default: 'bg-background text-foreground',
-    info: 'border-info/50 text-info dark:border-info [&>svg]:text-info',
-    success: 'border-success/50 text-success dark:border-success [&>svg]:text-success',
-    warning: 'border-warning/50 text-warning dark:border-warning [&>svg]:text-warning',
-    destructive: 'border-destructive/50 text-destructive dark:border-destructive [&>svg]:text-destructive',
+    default: 'bg-[var(--color-alert-default-bg)] border-[var(--color-alert-default-border)] text-[var(--color-alert-default-text)]',
+    info: 'bg-[var(--color-alert-info-bg)] border-[var(--color-alert-info-border)] text-[var(--color-alert-info-text)]',
+    success: 'bg-[var(--color-alert-success-bg)] border-[var(--color-alert-success-border)] text-[var(--color-alert-success-text)]',
+    warning: 'bg-[var(--color-alert-warning-bg)] border-[var(--color-alert-warning-border)] text-[var(--color-alert-warning-text)]',
+    destructive: 'bg-[var(--color-alert-destructive-bg)] border-[var(--color-alert-destructive-border)] text-[var(--color-alert-destructive-text)]',
   },
 } as const;
 

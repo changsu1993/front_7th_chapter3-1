@@ -4,15 +4,15 @@ import { cn } from "@/lib/utils"
 import { AlertCircle, CheckCircle, Info, AlertTriangle, X } from "lucide-react"
 
 const alertVariants = cva(
-  "relative w-full rounded-lg border px-4 py-3 text-sm [&>svg+div]:translate-y-[-3px] [&>svg]:absolute [&>svg]:left-4 [&>svg]:top-4 [&>svg]:text-foreground [&>svg~*]:pl-7",
+  "relative w-full rounded-[3px] border px-3 py-2.5 text-sm [&>svg+div]:translate-y-[-3px] [&>svg]:absolute [&>svg]:left-3 [&>svg]:top-3 [&>svg~*]:pl-7",
   {
     variants: {
       variant: {
-        default: "bg-background text-foreground",
-        info: "border-info/50 text-info dark:border-info [&>svg]:text-info",
-        success: "border-success/50 text-success dark:border-success [&>svg]:text-success",
-        warning: "border-warning/50 text-warning dark:border-warning [&>svg]:text-warning",
-        destructive: "border-destructive/50 text-destructive dark:border-destructive [&>svg]:text-destructive",
+        default: "bg-[var(--color-alert-default-bg)] border-[var(--color-alert-default-border)] text-[var(--color-alert-default-text)] [&>svg]:text-[var(--color-alert-default-text)]",
+        info: "bg-[var(--color-alert-info-bg)] border-[var(--color-alert-info-border)] text-[var(--color-alert-info-text)] [&>svg]:text-[var(--color-alert-info-text)]",
+        success: "bg-[var(--color-alert-success-bg)] border-[var(--color-alert-success-border)] text-[var(--color-alert-success-text)] [&>svg]:text-[var(--color-alert-success-text)]",
+        warning: "bg-[var(--color-alert-warning-bg)] border-[var(--color-alert-warning-border)] text-[var(--color-alert-warning-text)] [&>svg]:text-[var(--color-alert-warning-text)]",
+        destructive: "bg-[var(--color-alert-destructive-bg)] border-[var(--color-alert-destructive-border)] text-[var(--color-alert-destructive-text)] [&>svg]:text-[var(--color-alert-destructive-text)]",
       },
     },
     defaultVariants: {

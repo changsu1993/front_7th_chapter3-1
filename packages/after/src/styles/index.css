@@ -45,6 +45,32 @@
   --color-input: #cccccc;
   --color-ring: #1976d2;
 
+  /* Alert Colors (before의 alert 스타일 기준) */
+  /* Info Alert: #e3f2fd bg, #90caf9 border, #0d47a1 text */
+  --color-alert-info-bg: #e3f2fd;
+  --color-alert-info-border: #90caf9;
+  --color-alert-info-text: #0d47a1;
+
+  /* Success Alert: #e8f5e9 bg, #81c784 border, #1b5e20 text */
+  --color-alert-success-bg: #e8f5e9;
+  --color-alert-success-border: #81c784;
+  --color-alert-success-text: #1b5e20;
+
+  /* Warning Alert: #fff3e0 bg, #ffb74d border, #e65100 text */
+  --color-alert-warning-bg: #fff3e0;
+  --color-alert-warning-border: #ffb74d;
+  --color-alert-warning-text: #e65100;
+
+  /* Destructive/Error Alert: #ffebee bg, #e57373 border, #b71c1c text */
+  --color-alert-destructive-bg: #ffebee;
+  --color-alert-destructive-border: #e57373;
+  --color-alert-destructive-text: #b71c1c;
+
+  /* Default Alert: #f5f5f5 bg, #bdbdbd border, #424242 text */
+  --color-alert-default-bg: #f5f5f5;
+  --color-alert-default-border: #bdbdbd;
+  --color-alert-default-text: #424242;
+
   /* Radius (before는 3px 기본) */
   --radius-sm: 0.1875rem;
   --radius-md: 0.1875rem;
@@ -98,6 +124,27 @@
   --color-border: #404040;
   --color-input: #404040;
   --color-ring: #42a5f5;
+
+  /* Alert Colors - Dark mode */
+  --color-alert-info-bg: rgba(66, 165, 245, 0.15);
+  --color-alert-info-border: #42a5f5;
+  --color-alert-info-text: #90caf9;
+
+  --color-alert-success-bg: rgba(102, 187, 106, 0.15);
+  --color-alert-success-border: #66bb6a;
+  --color-alert-success-text: #a5d6a7;
+
+  --color-alert-warning-bg: rgba(255, 167, 38, 0.15);
+  --color-alert-warning-border: #ffa726;
+  --color-alert-warning-text: #ffcc80;
+
+  --color-alert-destructive-bg: rgba(239, 83, 80, 0.15);
+  --color-alert-destructive-border: #ef5350;
+  --color-alert-destructive-text: #ef9a9a;
+
+  --color-alert-default-bg: #2a2a2a;
+  --color-alert-default-border: #555555;
+  --color-alert-default-text: #b0b0b0;
 }
 
 @layer base {

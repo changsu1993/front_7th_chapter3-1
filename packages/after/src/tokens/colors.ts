@@ -22,6 +22,35 @@ export const legacyColors = {
   background: '#f0f0f0',
 } as const;
 
+// Before 패키지 Alert 색상 (참조용)
+export const legacyAlertColors = {
+  info: {
+    bg: '#e3f2fd',
+    border: '#90caf9',
+    text: '#0d47a1',
+  },
+  success: {
+    bg: '#e8f5e9',
+    border: '#81c784',
+    text: '#1b5e20',
+  },
+  warning: {
+    bg: '#fff3e0',
+    border: '#ffb74d',
+    text: '#e65100',
+  },
+  error: {
+    bg: '#ffebee',
+    border: '#e57373',
+    text: '#b71c1c',
+  },
+  default: {
+    bg: '#f5f5f5',
+    border: '#bdbdbd',
+    text: '#424242',
+  },
+} as const;
+
 // CSS 변수 참조
 export const colors = {
   // Semantic colors (CSS 변수 참조)
@@ -61,6 +90,27 @@ export const colors = {
   border: 'var(--color-border)',
   input: 'var(--color-input)',
   ring: 'var(--color-ring)',
+
+  // Alert colors (CSS 변수 참조)
+  alertInfoBg: 'var(--color-alert-info-bg)',
+  alertInfoBorder: 'var(--color-alert-info-border)',
+  alertInfoText: 'var(--color-alert-info-text)',
+
+  alertSuccessBg: 'var(--color-alert-success-bg)',
+  alertSuccessBorder: 'var(--color-alert-success-border)',
+  alertSuccessText: 'var(--color-alert-success-text)',
+
+  alertWarningBg: 'var(--color-alert-warning-bg)',
+  alertWarningBorder: 'var(--color-alert-warning-border)',
+  alertWarningText: 'var(--color-alert-warning-text)',
+
+  alertDestructiveBg: 'var(--color-alert-destructive-bg)',
+  alertDestructiveBorder: 'var(--color-alert-destructive-border)',
+  alertDestructiveText: 'var(--color-alert-destructive-text)',
+
+  alertDefaultBg: 'var(--color-alert-default-bg)',
+  alertDefaultBorder: 'var(--color-alert-default-border)',
+  alertDefaultText: 'var(--color-alert-default-text)',
 } as const;
 
 // Tailwind 클래스 매핑
