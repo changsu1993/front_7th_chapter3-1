@@ -431,20 +431,20 @@ export const ManagementPage: React.FC = () => {
   const stats = getStats();
 
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="min-h-screen bg-muted/50">
       <div className="max-w-[1200px] mx-auto p-5">
         <div className="mb-5">
-          <h1 className="text-2xl font-bold mb-1 text-gray-800">
+          <h1 className="text-2xl font-bold mb-1 text-foreground">
             관리 시스템
           </h1>
-          <p className="text-gray-600 text-sm">
+          <p className="text-muted-foreground text-sm">
             사용자와 게시글을 관리하세요
           </p>
         </div>
 
         <Card>
           <CardHeader className="pb-4">
-            <div className="flex gap-2 border-b border-gray-200 pb-3">
+            <div className="flex gap-2 border-b border-border pb-3">
               <Button
                 variant={entityType === 'post' ? 'default' : 'outline'}
                 onClick={() => setEntityType('post')}
@@ -482,43 +482,43 @@ export const ManagementPage: React.FC = () => {
             )}
 
             <div className="grid grid-cols-5 gap-3">
-              <Card className="bg-blue-50 border-blue-200">
+              <Card className="bg-blue-50 dark:bg-blue-950 border-blue-200 dark:border-blue-800">
                 <CardContent className="p-4">
-                  <div className="text-xs text-gray-600 mb-1">전체</div>
-                  <div className="text-2xl font-bold text-blue-600">{stats.total}</div>
+                  <div className="text-xs text-muted-foreground mb-1">전체</div>
+                  <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">{stats.total}</div>
                 </CardContent>
               </Card>
 
-              <Card className="bg-green-50 border-green-200">
+              <Card className="bg-green-50 dark:bg-green-950 border-green-200 dark:border-green-800">
                 <CardContent className="p-4">
-                  <div className="text-xs text-gray-600 mb-1">{stats.stat1.label}</div>
-                  <div className="text-2xl font-bold text-green-600">{stats.stat1.value}</div>
+                  <div className="text-xs text-muted-foreground mb-1">{stats.stat1.label}</div>
+                  <div className="text-2xl font-bold text-green-600 dark:text-green-400">{stats.stat1.value}</div>
                 </CardContent>
               </Card>
 
-              <Card className="bg-orange-50 border-orange-200">
+              <Card className="bg-orange-50 dark:bg-orange-950 border-orange-200 dark:border-orange-800">
                 <CardContent className="p-4">
-                  <div className="text-xs text-gray-600 mb-1">{stats.stat2.label}</div>
-                  <div className="text-2xl font-bold text-orange-600">{stats.stat2.value}</div>
+                  <div className="text-xs text-muted-foreground mb-1">{stats.stat2.label}</div>
+                  <div className="text-2xl font-bold text-orange-600 dark:text-orange-400">{stats.stat2.value}</div>
                 </CardContent>
               </Card>
 
-              <Card className="bg-red-50 border-red-200">
+              <Card className="bg-red-50 dark:bg-red-950 border-red-200 dark:border-red-800">
                 <CardContent className="p-4">
-                  <div className="text-xs text-gray-600 mb-1">{stats.stat3.label}</div>
-                  <div className="text-2xl font-bold text-red-600">{stats.stat3.value}</div>
+                  <div className="text-xs text-muted-foreground mb-1">{stats.stat3.label}</div>
+                  <div className="text-2xl font-bold text-red-600 dark:text-red-400">{stats.stat3.value}</div>
                 </CardContent>
               </Card>
 
-              <Card className="bg-gray-50 border-gray-200">
+              <Card className="bg-muted/50 border-border">
                 <CardContent className="p-4">
-                  <div className="text-xs text-gray-600 mb-1">{stats.stat4.label}</div>
-                  <div className="text-2xl font-bold text-gray-700">{stats.stat4.value}</div>
+                  <div className="text-xs text-muted-foreground mb-1">{stats.stat4.label}</div>
+                  <div className="text-2xl font-bold text-foreground">{stats.stat4.value}</div>
                 </CardContent>
               </Card>
             </div>
 
-            <div className="border rounded-lg bg-white overflow-hidden">
+            <div className="border border-border rounded-lg bg-background overflow-hidden">
               {entityType === 'user' ? renderUserTable() : renderPostTable()}
             </div>
           </CardContent>
