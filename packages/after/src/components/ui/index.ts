@@ -48,3 +48,6 @@ export { FormCheckbox } from "./form-checkbox"
 
 // Layout components
 export { Header } from "./header"
+
+// Theme
+export { ThemeToggle } from "./theme-toggle"

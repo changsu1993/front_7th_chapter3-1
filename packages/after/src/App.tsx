@@ -1,15 +1,25 @@
 import React from 'react'
-import { Header } from './components/organisms'
+import { ThemeProvider } from './components/theme-provider'
+import { Header, ThemeToggle } from './components/ui'
 import { ManagementPage } from './pages/ManagementPage'
-import './styles/components.css'
 
 export const App: React.FC = () => {
   return (
-    <div style={{ minHeight: '100vh', backgroundColor: '#f7fafc' }}>
-      <Header />
-      <main>
-        <ManagementPage />
-      </main>
-    </div>
+    <ThemeProvider defaultTheme="system" storageKey="design-system-theme">
+      <div className="min-h-screen bg-background text-foreground">
+        <Header
+          logo="L"
+          title="Design System Demo"
+          user={{
+            name: "Demo User",
+            email: "demo@example.com"
+          }}
+          actions={<ThemeToggle />}
+        />
+        <main>
+          <ManagementPage />
+        </main>
+      </div>
+    </ThemeProvider>
   );
 };

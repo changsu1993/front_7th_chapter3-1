@@ -266,7 +266,7 @@ export const Primary: Story = {
 
 ### ✅ 심화 구현 사항
 - [x] Dark mode 지원 (CSS 변수 기반)
-- [ ] Dark mode toggle 버튼
+- [x] Dark mode toggle 버튼
 
 ---
 
