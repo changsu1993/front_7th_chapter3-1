@@ -11,8 +11,14 @@ import {
   FormTextarea,
   SelectItem,
 } from "@/components/ui";
-import { userService } from '../services/userService';
-import { postService } from '../services/postService';
+import {
+  useAlert,
+  useModalState,
+  useFormState,
+  useEntityManagement,
+  useEntityStats,
+  useBadgeVariant,
+} from "@/hooks";
 import type { User } from '../services/userService';
 import type { Post } from '../services/postService';
 
@@ -21,75 +27,46 @@ type Entity = User | Post;
 
 export const ManagementPage: React.FC = () => {
   const [entityType, setEntityType] = useState<EntityType>('post');
-  const [data, setData] = useState<Entity[]>([]);
-  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const [selectedItem, setSelectedItem] = useState<Entity | null>(null);
-  const [showSuccessAlert, setShowSuccessAlert] = useState(false);
-  const [alertMessage, setAlertMessage] = useState('');
-  const [showErrorAlert, setShowErrorAlert] = useState(false);
-  const [errorMessage, setErrorMessage] = useState('');
 
-  const [formData, setFormData] = useState<any>({});
+  // Custom Hooks
+  const { alert, showSuccess, showError, hideAlert } = useAlert();
+  const {
+    isCreateOpen,
+    isEditOpen,
+    selectedItem,
+    openCreate,
+    openEdit,
+    closeCreate,
+    closeEdit,
+    setIsCreateOpen,
+    setIsEditOpen,
+  } = useModalState<Entity>();
+  const { formData, setFormData, reset: resetForm } = useFormState<Record<string, unknown>>();
+  const { data, create, update, remove, publish, archive, restore } = useEntityManagement(entityType);
+  const stats = useEntityStats(data, entityType);
+  const { getStatusVariant, getRoleVariant, getStatusLabel, getRoleLabel } = useBadgeVariant();
 
+  // Reset state when entity type changes
   useEffect(() => {
-    loadData();
-    setFormData({});
-    setIsCreateModalOpen(false);
-    setIsEditModalOpen(false);
-    setSelectedItem(null);
-  }, [entityType]);
+    resetForm({});
+    closeCreate();
+    closeEdit();
+  }, [entityType, resetForm, closeCreate, closeEdit]);
 
-  const loadData = async () => {
-    try {
-      let result: Entity[];
-
-      if (entityType === 'user') {
-        result = await userService.getAll();
-      } else {
-        result = await postService.getAll();
-      }
-
-      setData(result);
-    } catch (error: any) {
-      setErrorMessage('데이터를 불러오는데 실패했습니다');
-      setShowErrorAlert(true);
-    }
-  };
-
+  // Handlers
   const handleCreate = async () => {
     try {
-      if (entityType === 'user') {
-        await userService.create({
-          username: formData.username,
-          email: formData.email,
-          role: formData.role || 'user',
-          status: formData.status || 'active',
-        });
-      } else {
-        await postService.create({
-          title: formData.title,
-          content: formData.content || '',
-          author: formData.author,
-          category: formData.category,
-          status: formData.status || 'draft',
-        });
-      }
-
-      await loadData();
-      setIsCreateModalOpen(false);
-      setFormData({});
-      setAlertMessage(`${entityType === 'user' ? '사용자' : '게시글'}가 생성되었습니다`);
-      setShowSuccessAlert(true);
-    } catch (error: any) {
-      setErrorMessage(error.message || '생성에 실패했습니다');
-      setShowErrorAlert(true);
+      await create(formData);
+      closeCreate();
+      resetForm({});
+      showSuccess(`${entityType === 'user' ? '사용자' : '게시글'}가 생성되었습니다`);
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : '생성에 실패했습니다';
+      showError(message);
     }
   };
 
   const handleEdit = (item: Entity) => {
-    setSelectedItem(item);
-
     if (entityType === 'user') {
       const user = item as User;
       setFormData({
@@ -108,29 +85,20 @@ export const ManagementPage: React.FC = () => {
         status: post.status,
       });
     }
-
-    setIsEditModalOpen(true);
+    openEdit(item);
   };
 
   const handleUpdate = async () => {
     if (!selectedItem) return;
 
     try {
-      if (entityType === 'user') {
-        await userService.update(selectedItem.id, formData);
-      } else {
-        await postService.update(selectedItem.id, formData);
-      }
-
-      await loadData();
-      setIsEditModalOpen(false);
-      setFormData({});
-      setSelectedItem(null);
-      setAlertMessage(`${entityType === 'user' ? '사용자' : '게시글'}가 수정되었습니다`);
-      setShowSuccessAlert(true);
-    } catch (error: any) {
-      setErrorMessage(error.message || '수정에 실패했습니다');
-      setShowErrorAlert(true);
+      await update(selectedItem.id, formData);
+      closeEdit();
+      resetForm({});
+      showSuccess(`${entityType === 'user' ? '사용자' : '게시글'}가 수정되었습니다`);
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : '수정에 실패했습니다';
+      showError(message);
     }
   };
 
@@ -138,95 +106,33 @@ export const ManagementPage: React.FC = () => {
     if (!confirm('정말 삭제하시겠습니까?')) return;
 
     try {
-      if (entityType === 'user') {
-        await userService.delete(id);
-      } else {
-        await postService.delete(id);
-      }
-
-      await loadData();
-      setAlertMessage('삭제되었습니다');
-      setShowSuccessAlert(true);
-    } catch (error: any) {
-      setErrorMessage(error.message || '삭제에 실패했습니다');
-      setShowErrorAlert(true);
+      await remove(id);
+      showSuccess('삭제되었습니다');
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : '삭제에 실패했습니다';
+      showError(message);
     }
   };
 
   const handleStatusAction = async (id: number, action: 'publish' | 'archive' | 'restore') => {
-    if (entityType !== 'post') return;
-
     try {
       if (action === 'publish') {
-        await postService.publish(id);
+        await publish(id);
       } else if (action === 'archive') {
-        await postService.archive(id);
-      } else if (action === 'restore') {
-        await postService.restore(id);
+        await archive(id);
+      } else {
+        await restore(id);
       }
 
-      await loadData();
-      const message =
-        action === 'publish' ? '게시' :
-        action === 'archive' ? '보관' :
-        '복원';
-      setAlertMessage(`${message}되었습니다`);
-      setShowSuccessAlert(true);
-    } catch (error: any) {
-      setErrorMessage(error.message || '작업에 실패했습니다');
-      setShowErrorAlert(true);
+      const message = action === 'publish' ? '게시' : action === 'archive' ? '보관' : '복원';
+      showSuccess(`${message}되었습니다`);
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : '작업에 실패했습니다';
+      showError(message);
     }
   };
 
-  const getStats = () => {
-    if (entityType === 'user') {
-      const users = data as User[];
-      return {
-        total: users.length,
-        stat1: { label: '활성', value: users.filter(u => u.status === 'active').length },
-        stat2: { label: '비활성', value: users.filter(u => u.status === 'inactive').length },
-        stat3: { label: '정지', value: users.filter(u => u.status === 'suspended').length },
-        stat4: { label: '관리자', value: users.filter(u => u.role === 'admin').length },
-      };
-    } else {
-      const posts = data as Post[];
-      return {
-        total: posts.length,
-        stat1: { label: '게시됨', value: posts.filter(p => p.status === 'published').length },
-        stat2: { label: '임시저장', value: posts.filter(p => p.status === 'draft').length },
-        stat3: { label: '보관됨', value: posts.filter(p => p.status === 'archived').length },
-        stat4: { label: '총 조회수', value: posts.reduce((sum, p) => sum + p.views, 0) },
-      };
-    }
-  };
-
-  const getStatusBadgeVariant = (status: string): "success" | "warning" | "destructive" | "secondary" => {
-    switch (status) {
-      case 'active':
-      case 'published':
-        return 'success';
-      case 'inactive':
-      case 'draft':
-        return 'warning';
-      case 'suspended':
-      case 'archived':
-        return 'destructive';
-      default:
-        return 'secondary';
-    }
-  };
-
-  const getRoleBadgeVariant = (role: string): "default" | "info" | "secondary" => {
-    switch (role) {
-      case 'admin':
-        return 'info';
-      case 'moderator':
-        return 'default';
-      default:
-        return 'secondary';
-    }
-  };
-
+  // Render functions
   const renderUserTable = () => {
     const users = data as User[];
     return (
@@ -250,13 +156,13 @@ export const ManagementPage: React.FC = () => {
               <TableCell className="font-medium">{user.username}</TableCell>
               <TableCell>{user.email}</TableCell>
               <TableCell>
-                <Badge variant={getRoleBadgeVariant(user.role)}>
-                  {user.role === 'admin' ? '관리자' : user.role === 'moderator' ? '운영자' : '사용자'}
+                <Badge variant={getRoleVariant(user.role)}>
+                  {getRoleLabel(user.role)}
                 </Badge>
               </TableCell>
               <TableCell>
-                <Badge variant={getStatusBadgeVariant(user.status)}>
-                  {user.status === 'active' ? '활성' : user.status === 'inactive' ? '비활성' : '정지'}
+                <Badge variant={getStatusVariant(user.status)}>
+                  {getStatusLabel(user.status, 'user')}
                 </Badge>
               </TableCell>
               <TableCell>{user.createdAt}</TableCell>
@@ -304,8 +210,8 @@ export const ManagementPage: React.FC = () => {
                 <Badge variant="outline">{post.category}</Badge>
               </TableCell>
               <TableCell>
-                <Badge variant={getStatusBadgeVariant(post.status)}>
-                  {post.status === 'published' ? '게시됨' : post.status === 'draft' ? '임시저장' : '보관됨'}
+                <Badge variant={getStatusVariant(post.status)}>
+                  {getStatusLabel(post.status, 'post')}
                 </Badge>
               </TableCell>
               <TableCell>{post.views}</TableCell>
@@ -346,7 +252,7 @@ export const ManagementPage: React.FC = () => {
     <div className="space-y-4">
       <FormInput
         name="username"
-        value={formData.username || ''}
+        value={(formData.username as string) || ''}
         onChange={(e) => setFormData({ ...formData, username: e.target.value })}
         label="사용자명"
         placeholder="사용자명을 입력하세요"
@@ -354,7 +260,7 @@ export const ManagementPage: React.FC = () => {
       />
       <FormInput
         name="email"
-        value={formData.email || ''}
+        value={(formData.email as string) || ''}
         onChange={(e) => setFormData({ ...formData, email: e.target.value })}
         label="이메일"
         placeholder="이메일을 입력하세요"
@@ -364,7 +270,7 @@ export const ManagementPage: React.FC = () => {
       <div className="grid grid-cols-2 gap-4">
         <FormSelect
           name="role"
-          value={formData.role || 'user'}
+          value={(formData.role as string) || 'user'}
           onValueChange={(value) => setFormData({ ...formData, role: value })}
           label="역할"
         >
@@ -374,7 +280,7 @@ export const ManagementPage: React.FC = () => {
         </FormSelect>
         <FormSelect
           name="status"
-          value={formData.status || 'active'}
+          value={(formData.status as string) || 'active'}
           onValueChange={(value) => setFormData({ ...formData, status: value })}
           label="상태"
         >
@@ -390,7 +296,7 @@ export const ManagementPage: React.FC = () => {
     <div className="space-y-4">
       <FormInput
         name="title"
-        value={formData.title || ''}
+        value={(formData.title as string) || ''}
         onChange={(e) => setFormData({ ...formData, title: e.target.value })}
         label="제목"
         placeholder="게시글 제목을 입력하세요"
@@ -399,7 +305,7 @@ export const ManagementPage: React.FC = () => {
       <div className="grid grid-cols-2 gap-4">
         <FormInput
           name="author"
-          value={formData.author || ''}
+          value={(formData.author as string) || ''}
           onChange={(e) => setFormData({ ...formData, author: e.target.value })}
           label="작성자"
           placeholder="작성자명"
@@ -407,7 +313,7 @@ export const ManagementPage: React.FC = () => {
         />
         <FormSelect
           name="category"
-          value={formData.category || ''}
+          value={(formData.category as string) || ''}
           onValueChange={(value) => setFormData({ ...formData, category: value })}
           label="카테고리"
           placeholder="카테고리 선택"
@@ -419,7 +325,7 @@ export const ManagementPage: React.FC = () => {
       </div>
       <FormTextarea
         name="content"
-        value={formData.content || ''}
+        value={(formData.content as string) || ''}
         onChange={(e) => setFormData({ ...formData, content: e.target.value })}
         label="내용"
         placeholder="게시글 내용을 입력하세요"
@@ -427,8 +333,6 @@ export const ManagementPage: React.FC = () => {
       />
     </div>
   );
-
-  const stats = getStats();
 
   return (
     <div className="min-h-screen bg-muted/50">
@@ -462,22 +366,22 @@ export const ManagementPage: React.FC = () => {
 
           <CardContent className="space-y-4">
             <div className="flex justify-end">
-              <Button onClick={() => setIsCreateModalOpen(true)}>
+              <Button onClick={openCreate}>
                 새로 만들기
               </Button>
             </div>
 
-            {showSuccessAlert && (
-              <Alert variant="success" onClose={() => setShowSuccessAlert(false)}>
+            {alert.show && alert.type === 'success' && (
+              <Alert variant="success" onClose={hideAlert}>
                 <AlertTitle>성공</AlertTitle>
-                <AlertDescription>{alertMessage}</AlertDescription>
+                <AlertDescription>{alert.message}</AlertDescription>
               </Alert>
             )}
 
-            {showErrorAlert && (
-              <Alert variant="destructive" onClose={() => setShowErrorAlert(false)}>
+            {alert.show && alert.type === 'error' && (
+              <Alert variant="destructive" onClose={hideAlert}>
                 <AlertTitle>오류</AlertTitle>
-                <AlertDescription>{errorMessage}</AlertDescription>
+                <AlertDescription>{alert.message}</AlertDescription>
               </Alert>
             )}
 
@@ -526,7 +430,7 @@ export const ManagementPage: React.FC = () => {
       </div>
 
       {/* Create Dialog */}
-      <Dialog open={isCreateModalOpen} onOpenChange={setIsCreateModalOpen}>
+      <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
         <DialogContent className="max-w-lg">
           <DialogHeader>
             <DialogTitle>
@@ -538,8 +442,8 @@ export const ManagementPage: React.FC = () => {
             <Button
               variant="secondary"
               onClick={() => {
-                setIsCreateModalOpen(false);
-                setFormData({});
+                closeCreate();
+                resetForm({});
               }}
             >
               취소
@@ -552,7 +456,7 @@ export const ManagementPage: React.FC = () => {
       </Dialog>
 
       {/* Edit Dialog */}
-      <Dialog open={isEditModalOpen} onOpenChange={setIsEditModalOpen}>
+      <Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>
         <DialogContent className="max-w-lg">
           <DialogHeader>
             <DialogTitle>
@@ -572,9 +476,8 @@ export const ManagementPage: React.FC = () => {
             <Button
               variant="secondary"
               onClick={() => {
-                setIsEditModalOpen(false);
-                setFormData({});
-                setSelectedItem(null);
+                closeEdit();
+                resetForm({});
               }}
             >
               취소
