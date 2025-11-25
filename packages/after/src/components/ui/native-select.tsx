@@ -52,4 +52,4 @@ const NativeSelectOptGroup = React.forwardRef<
 })
 NativeSelectOptGroup.displayName = "NativeSelectOptGroup"
 
-export { NativeSelect, NativeSelectOption, NativeSelectOptGroup, nativeSelectVariants }
+export { NativeSelect, NativeSelectOption, NativeSelectOptGroup }

@@ -1,6 +1,3 @@
-// For more info, see https://github.com/storybookjs/eslint-plugin-storybook#configuration-flat-config-format
-import storybook from "eslint-plugin-storybook";
-
 import js from '@eslint/js'
 import globals from 'globals'
 import reactHooks from 'eslint-plugin-react-hooks'
@@ -21,6 +18,13 @@ export default defineConfig([
     languageOptions: {
       ecmaVersion: 2020,
       globals: globals.browser,
+    },
+    rules: {
+      // shadcn/ui 패턴: CVA variants를 컴포넌트와 함께 export 허용
+      'react-refresh/only-export-components': [
+        'warn',
+        { allowConstantExport: true },
+      ],
     },
   },
 ])
