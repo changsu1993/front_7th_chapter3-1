@@ -9,7 +9,6 @@ import {
   FormInput,
   FormSelect,
   FormTextarea,
-  SelectItem,
 } from "@/components/ui";
 import {
   useAlert,
@@ -274,9 +273,9 @@ export const ManagementPage: React.FC = () => {
           onValueChange={(value) => setFormData({ ...formData, role: value })}
           label="역할"
         >
-          <SelectItem value="user">사용자</SelectItem>
-          <SelectItem value="moderator">운영자</SelectItem>
-          <SelectItem value="admin">관리자</SelectItem>
+          <option value="user">사용자</option>
+          <option value="moderator">운영자</option>
+          <option value="admin">관리자</option>
         </FormSelect>
         <FormSelect
           name="status"
@@ -284,9 +283,9 @@ export const ManagementPage: React.FC = () => {
           onValueChange={(value) => setFormData({ ...formData, status: value })}
           label="상태"
         >
-          <SelectItem value="active">활성</SelectItem>
-          <SelectItem value="inactive">비활성</SelectItem>
-          <SelectItem value="suspended">정지</SelectItem>
+          <option value="active">활성</option>
+          <option value="inactive">비활성</option>
+          <option value="suspended">정지</option>
         </FormSelect>
       </div>
     </div>
@@ -318,9 +317,9 @@ export const ManagementPage: React.FC = () => {
           label="카테고리"
           placeholder="카테고리 선택"
         >
-          <SelectItem value="development">Development</SelectItem>
-          <SelectItem value="design">Design</SelectItem>
-          <SelectItem value="accessibility">Accessibility</SelectItem>
+          <option value="development">Development</option>
+          <option value="design">Design</option>
+          <option value="accessibility">Accessibility</option>
         </FormSelect>
       </div>
       <FormTextarea

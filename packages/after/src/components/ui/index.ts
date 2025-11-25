@@ -18,16 +18,6 @@ export {
 export { Input } from "./input"
 export { Label } from "./label"
 export {
-  Select,
-  SelectGroup,
-  SelectValue,
-  SelectTrigger,
-  SelectContent,
-  SelectLabel,
-  SelectItem,
-  SelectSeparator,
-} from "./select"
-export {
   Table,
   TableHeader,
   TableBody,
@@ -38,6 +28,11 @@ export {
   TableCaption,
 } from "./table"
 export { Textarea } from "./textarea"
+export {
+  NativeSelect,
+  NativeSelectOption,
+  NativeSelectOptGroup,
+} from "./native-select"
 
 // Form field components with consistent API
 export { FormField } from "./form-field"

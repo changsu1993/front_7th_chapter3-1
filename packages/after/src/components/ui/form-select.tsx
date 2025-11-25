@@ -1,29 +1,18 @@
 import * as React from "react"
-import {
-  Select,
-  SelectContent,
-  SelectTrigger,
-  SelectValue,
-} from "./select"
+import { NativeSelect } from "./native-select"
 import { Label } from "./label"
 import { cn } from "@/lib/utils"
 
-export interface FormSelectProps {
-  name: string
+export interface FormSelectProps
+  extends React.SelectHTMLAttributes<HTMLSelectElement> {
   label?: string
   helperText?: string
   error?: string
-  disabled?: boolean
-  required?: boolean
   placeholder?: string
-  value?: string
-  defaultValue?: string
   onValueChange?: (value: string) => void
-  className?: string
-  children: React.ReactNode
 }
 
-const FormSelect = React.forwardRef<HTMLButtonElement, FormSelectProps>(
+const FormSelect = React.forwardRef<HTMLSelectElement, FormSelectProps>(
   (
     {
       name,
@@ -35,15 +24,22 @@ const FormSelect = React.forwardRef<HTMLButtonElement, FormSelectProps>(
       placeholder,
       value,
       defaultValue,
+      onChange,
       onValueChange,
       className,
       children,
+      ...props
     },
     ref
   ) => {
     const helperTextId = `${name}-helper`
     const errorId = `${name}-error`
     const describedBy = error ? errorId : helperText ? helperTextId : undefined
+
+    const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+      onChange?.(e)
+      onValueChange?.(e.target.value)
+    }
 
     return (
       <div className={cn("space-y-2", disabled && "opacity-50")}>
@@ -53,25 +49,28 @@ const FormSelect = React.forwardRef<HTMLButtonElement, FormSelectProps>(
             {required && <span className="text-destructive ml-1">*</span>}
           </Label>
         )}
-        <Select
+        <NativeSelect
+          ref={ref}
+          id={name}
+          name={name}
           value={value}
           defaultValue={defaultValue}
-          onValueChange={onValueChange}
+          onChange={handleChange}
           disabled={disabled}
           required={required}
-          name={name}
+          className={cn(error && "border-destructive", className)}
+          aria-describedby={describedBy}
+          aria-invalid={!!error}
+          variant={error ? "error" : "default"}
+          {...props}
         >
-          <SelectTrigger
-            ref={ref}
-            id={name}
-            className={cn(error && "border-destructive", className)}
-            aria-describedby={describedBy}
-            aria-invalid={!!error}
-          >
-            <SelectValue placeholder={placeholder} />
-          </SelectTrigger>
-          <SelectContent>{children}</SelectContent>
-        </Select>
+          {placeholder && (
+            <option value="" disabled>
+              {placeholder}
+            </option>
+          )}
+          {children}
+        </NativeSelect>
         {helperText && !error && (
           <p id={helperTextId} className="text-sm text-muted-foreground">
             {helperText}
