@@ -1,55 +1,10 @@
 /**
  * Design Tokens - Colors
- * CSS 변수 기반 색상 정의 (before 패키지 색상과 동일)
+ * CSS 변수 기반 색상 정의
  * 다크모드 자동 지원 (CSS 변수가 .dark 클래스에서 변경됨)
+ *
+ * 실제 CSS 변수는 src/styles/index.css의 @theme에서 정의됨
  */
-
-// Before 패키지 원본 색상 (참조용)
-export const legacyColors = {
-  primary: '#1976d2',       // btn-primary
-  primaryHover: '#1565c0',
-  secondary: '#f5f5f5',     // btn-secondary
-  secondaryHover: '#e0e0e0',
-  danger: '#d32f2f',        // btn-danger
-  dangerHover: '#c62828',
-  success: '#388e3c',       // btn-success
-  successHover: '#2e7d32',
-  warning: '#f57c00',       // badge-warning
-  info: '#0288d1',          // badge-info
-  text: '#333333',
-  textMuted: '#666666',
-  border: '#dddddd',
-  background: '#f0f0f0',
-} as const;
-
-// Before 패키지 Alert 색상 (참조용)
-export const legacyAlertColors = {
-  info: {
-    bg: '#e3f2fd',
-    border: '#90caf9',
-    text: '#0d47a1',
-  },
-  success: {
-    bg: '#e8f5e9',
-    border: '#81c784',
-    text: '#1b5e20',
-  },
-  warning: {
-    bg: '#fff3e0',
-    border: '#ffb74d',
-    text: '#e65100',
-  },
-  error: {
-    bg: '#ffebee',
-    border: '#e57373',
-    text: '#b71c1c',
-  },
-  default: {
-    bg: '#f5f5f5',
-    border: '#bdbdbd',
-    text: '#424242',
-  },
-} as const;
 
 // CSS 변수 참조
 export const colors = {
